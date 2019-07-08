@@ -30,6 +30,9 @@ namespace Examen_IIParcial
             InitializeComponent();
             string ConnectionString = Conexion.Cn;
             SqlCon = new SqlConnection(ConnectionString);
+            MostrarPersonas();
+            Mostrar_Tipo_Usuario();
+            
         }
 
         //METODO PARA MOSTRAR A LAS PERSONAS
@@ -37,22 +40,96 @@ namespace Examen_IIParcial
         {
             try
             {
-                string query = "SELECT * FROM Zoo.Animal";
+                string query = "SELECT * FROM Usuarios.Persona";
                 SqlDataAdapter adapter = new SqlDataAdapter(query, SqlCon);
                 using (adapter)
                 {
-                    DataTable TablaAnimales = new DataTable();
-                    adapter.Fill(TablaAnimales);
-                    LbAnimales.DisplayMemberPath = "Nombre";
-                    LbAnimales.SelectedValuePath = "Id_Animal";
-                    LbAnimales.ItemsSource = TablaAnimales.DefaultView;
+                    DataTable TablaPersona = new DataTable();
+                    adapter.Fill(TablaPersona);
+                    lbpersona.DisplayMemberPath = "Nombre";
+                    lbpersona.SelectedValuePath = "Id_Persona";
+                    lbpersona.ItemsSource = TablaPersona.DefaultView;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                MessageBox.Show(e.ToString());
             }
         }
+
+        private void Agregar_Persona(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string query = @"INSERT INTO Usuarios.Persona (Nombre,Apellido) VALUES (@nom,@ape)";
+                SqlCommand SqlCmd = new SqlCommand(query, SqlCon);
+
+                SqlCon.Open();
+                SqlCmd.Parameters.AddWithValue("@nom", txtnombre.Text);
+                SqlCmd.Parameters.AddWithValue("@ape", txtnombre.Text);
+                SqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                SqlCon.Close();
+                MostrarPersonas();
+            }
+        }
+
+        private void Eliminar_Persona(object sender,RoutedEventArgs e)
+        {
+            try
+            {
+                string query = @"DELETE FROM Usuarios.Persona WHERE Id_Persona = @id";
+                SqlCommand SqlCmd = new SqlCommand(query, SqlCon);
+
+                SqlCon.Open();
+                SqlCmd.Parameters.AddWithValue("@id",lbpersona.SelectedValue);
+                SqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                SqlCon.Close();
+                MostrarPersonas();
+            }
+        }
+
+        private void Actualizar_Persona(object sender,RoutedEventArgs e)
+        {
+
+        }
+        private void Mostrar_Tipo_Usuario()
+        {
+            try
+            {
+                string query = "SELECT * FROM Usuarios.Tipo_Usuario";
+                SqlDataAdapter adapter = new SqlDataAdapter(query, SqlCon);
+                using (adapter)
+                {
+                    DataTable TablaPersona = new DataTable();
+                    adapter.Fill(TablaPersona);
+                    lbtipousuario.DisplayMemberPath = "Tipo_Usuario";
+                    lbtipousuario.SelectedValuePath = "Id_Tipo_Usuario";
+                    lbtipousuario.ItemsSource = TablaPersona.DefaultView;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        
     }
 }
