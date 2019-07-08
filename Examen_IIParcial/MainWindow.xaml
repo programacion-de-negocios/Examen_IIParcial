@@ -20,12 +20,12 @@
         </Grid.RowDefinitions>
         <ListBox Name="lbpersona" Margin="15" Grid.Column="0" Grid.Row="0"/>
         <ListBox Name="lbtipousuario" Margin="15" Grid.Column="1" Grid.Row="0"/>
-        <ListBox Name="lbusuario" Margin="15" Grid.Column="2" Grid.Row="0"/>
+        <ListBox Name="lbusuario" Margin="15" Grid.Column="2" Grid.Row="0" SelectionChanged="Selected_Changed"/>
         <ListBox Name="lbconexion" Margin="15" Grid.Column="3" Grid.Row="0"/>
         <StackPanel Grid.Column="0" Grid.Row="1">
             <Button Name="BtnEl_Persona" Content="ELIMINAR" Margin="5" Click="Eliminar_Persona"/>
             <Button Name="BtnAg_Persona" Content="AGREGAR" Margin="5" Click="Agregar_Persona"/>
-            <Button Name="BtnAct_Persona" Content="ACTUALIZAR" Margin="5"/>
+            <Button Name="BtnAct_Persona" Content="ACTUALIZAR" Margin="5" Click="Actualizar_Persona"/>
             <TextBox Name="txtnombre" Margin="5"/>
             <TextBox Name="txtapellido" Margin="5"/>
         </StackPanel>

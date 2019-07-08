@@ -32,6 +32,7 @@ namespace Examen_IIParcial
             SqlCon = new SqlConnection(ConnectionString);
             MostrarPersonas();
             Mostrar_Tipo_Usuario();
+            Mostrar_Usuario();
             
         }
 
@@ -107,7 +108,27 @@ namespace Examen_IIParcial
 
         private void Actualizar_Persona(object sender,RoutedEventArgs e)
         {
+            try
+            {
+                string query = @"UPDATE Usuarios.Persona SET Nombre = @nom, Apellido = @ape WHERE Id_Persona = @id";
+                SqlCommand SqlCmd = new SqlCommand(query, SqlCon);
 
+                SqlCon.Open();
+                SqlCmd.Parameters.AddWithValue("@nom", txtnombre.Text);
+                SqlCmd.Parameters.AddWithValue("@ape", txtnombre.Text);
+                SqlCmd.Parameters.AddWithValue("@id", lbpersona.SelectedValue);
+                SqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                SqlCon.Close();
+                MostrarPersonas();
+            }
         }
         private void Mostrar_Tipo_Usuario()
         {
@@ -130,6 +151,54 @@ namespace Examen_IIParcial
             }
         }
 
+        private void Mostrar_Usuario()
+        {
+            try
+            {
+                string query = "SELECT * FROM Usuarios.Usuario";
+                SqlDataAdapter adapter = new SqlDataAdapter(query, SqlCon);
+                using (adapter)
+                {
+                    DataTable TablaPersona = new DataTable();
+                    adapter.Fill(TablaPersona);
+                    lbusuario.DisplayMemberPath = "Nombre_Usuario";
+                    lbusuario.SelectedValuePath = "Id_Usuario";
+                    lbusuario.ItemsSource = TablaPersona.DefaultView;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void Mostrar_Conexion()
+        {
+            try
+            {
+                string query = "SELECT * FROM Usuarios.Conexion a INNER JOIN Usuarios.usuario b ON a.Id_Usuario =b.Id_Usuario WHERE a.Id_Usuario=@id";
+                SqlCommand SqlCmd = new SqlCommand(query, SqlCon);
+                SqlDataAdapter adapter = new SqlDataAdapter(SqlCmd);
+                using (adapter)
+                {
+                    SqlCmd.Parameters.AddWithValue("@id",lbusuario.SelectedValue);
+                    DataTable Tabla = new DataTable();
+                    adapter.Fill(Tabla);
+                    lbusuario.DisplayMemberPath = "Ultima_Conexion";
+                    lbusuario.SelectedValuePath = "Id_Conexion";
+                    lbusuario.ItemsSource = Tabla.DefaultView;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void Selected_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            Mostrar_Conexion();
+        }
         
     }
 }
